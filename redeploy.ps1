@@ -1,4 +1,4 @@
-# Variables
+# Variables # Windows-only
 $imageName = "hammasou/mon-image:latest"
 $deploymentName = "mon-appli"
 Write-Host "Construction de l'image Docker..."
