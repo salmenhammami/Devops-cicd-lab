@@ -3,7 +3,7 @@ const express = require("express");
 const app = express();
 
 app.get("/", (req, res) => {
-  res.send("Hello DevOps wor");
+  res.send("Hello DevOps world !");
 });
 
 // Connexion au serveur
