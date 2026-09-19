@@ -1,1 +1,0 @@
-"type": "commonjs", /* module mech twalli t3ml import fi 3ou4 require */
