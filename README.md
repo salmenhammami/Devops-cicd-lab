@@ -1,51 +1,54 @@
-# DevOps Project Lab
+# DevOps CI/CD Lab
 
-A hands-on DevOps showcase featuring an automated, end-to-end CI/CD pipeline built to test, analyze, containerize, and deploy full-stack applications.
+A place to actually run the DevOps tools instead of just reading about them.
 
+The application is deliberately boring — one Express endpoint that returns a string.
+Everything worth looking at is around it: how the code gets analysed, containerised,
+deployed and monitored. I set each tool up properly and got it working locally, rather
+than copying a config I'd never run.
 
-## Overview
+## What's in here
 
-This repository demonstrates practical DevOps practices by automating the delivery workflow for microservices and full-stack environments. It bridges software development and infrastructure management—focusing on code quality, automated testing, container orchestration, and seamless deployments.
+**Jenkins** — a pipeline that resolves the SonarQube scanner, checks out the branch,
+and runs static analysis with the token pulled from Jenkins credentials rather than
+hard-coded. Windows agent, so the steps are `bat`.
 
+**Docker** — an image for the app, plus a Compose file that mounts the source for hot
+reload while keeping `node_modules` in the container.
 
-## Core Technical Stack
+**Kubernetes** — a Deployment running three replicas behind a NodePort Service, tested
+on minikube.
 
-* **CI/CD Orchestration:** Jenkins
-* **Static Code Analysis:** SonarQube
-* **Containerization & Orchestration:** Docker, Docker Compose, Kubernetes (minikube)
-* **Hosting & Deployment:** Railway / Cloud Infrastructure
-* **Version Control:** Git & GitHub Workflow
+**Terraform** — the Docker provider pulling `node:18-alpine` and running the container
+with the port mapping declared in code.
 
+**Prometheus** — a scrape config collecting metrics from the Jenkins controller.
 
-## Pipeline Architecture
-
-1. **Source Control:** Triggered on code commits to target branches.
-2. **Quality Gate:** Code analysis via **SonarQube** to enforce security standards, code coverage, and linting.
-3. **Build & Test:** Automated unit testing and application build steps.
-4. **Containerization:** Multi-stage **Docker** builds to minimize image sizes.
-5. **Deployment:** Automated deployment pipeline pushing containers to target environments.
-
-
-## Getting Started Locally
-
-### Prerequisites
-
-* Docker & Docker Compose
-* Git
-
-### Quick Setup
+## Running it
 
 ```bash
-# Clone the repository
-git clone https://github.com/HammamiSalmen/DevOps.git
+git clone https://github.com/salmenhammami/DevOps.git
 cd DevOps
 
-# Run the environment using Docker Compose
-docker-compose up -d --build
+npm install && npm start      # http://localhost:6969
+docker compose up -d --build  # or with Docker
 
+minikube start                # or on Kubernetes
+kubectl apply -f deployment.yaml -f service.yaml
+
+cd terraform && terraform init && terraform apply
 ```
 
+For the pipeline, Jenkins needs a scanner installation named `MySonarScanner`, a
+SonarQube server named `projet`, and a secret-text credential with the ID `sonarqube`.
 
-## Purpose
+## Where it stops
 
-Built as a dedicated laboratory to apply, test, and showcase real-world CI/CD workflows, automated testing gates, and containerized deployment patterns.
+The pipeline ends at static analysis. There's no test stage because the app has no
+tests, no quality gate that fails the build, and no build-and-push stage — so the
+image the Kubernetes manifests expect is one I push by hand. Closing those gaps is
+the next thing I want to do here, along with making the pipeline run on Linux agents.
+
+---
+
+**Salmen Hammami** · [GitHub](https://github.com/salmenhammami) · [LinkedIn](https://www.linkedin.com/in/salmenhammami/)
