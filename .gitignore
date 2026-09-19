@@ -1,0 +1,8 @@
+node_modules/
+npm-debug.log*
+.terraform/
+*.tfstate
+*.tfstate.*
+.terraform.lock.hcl
+*.code-workspace
+.env
